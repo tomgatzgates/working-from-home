@@ -1,0 +1,23 @@
+{
+  "name": "wfh",
+  "version": "0.0.1",
+  "description": "Slackbot to let your team know when you're working from home",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tomgatzgates/working-from-home.git"
+  },
+  "author": "Tom Gates",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomgatzgates/working-from-home/issues"
+  },
+  "homepage": "https://github.com/tomgatzgates/working-from-home#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}
