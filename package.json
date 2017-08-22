@@ -19,7 +19,9 @@
   "homepage": "https://github.com/tomgatzgates/working-from-home#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.15.4"
+    "chrono-node": "^1.3.5",
+    "express": "^4.15.4",
+    "redis": "^2.8.0"
   },
   "devDependencies": {}
 }
