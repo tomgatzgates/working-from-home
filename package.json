@@ -18,8 +18,8 @@
   },
   "homepage": "https://github.com/tomgatzgates/working-from-home#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.4"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
