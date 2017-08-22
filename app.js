@@ -4,14 +4,12 @@ var chrono = require('chrono-node')
 var redis = require("redis");
 
 var app = express();
-var db = redis.createClient({url: process.env.REDIS_URL}
-);
+var db = redis.createClient({url: process.env.REDIS_URL});
 
-var SlackRequest = function(data) {
+function SlackRequest(data) {
   var splitText = data.text.split(' ');
   var action = splitText[0];
   var text = splitText.slice(1, splitText.length).join(' ');
-
 
   this.action = action;
   this.text = text;
@@ -24,17 +22,30 @@ var SlackRequest = function(data) {
   };
 };
 
-SlackRequest.prototype.date = function() {
+SlackRequest.prototype = {
+  date: getDate,
+  perform: perform,
+};
+
+function getDate() {
   return chrono.parseDate(this.text);
 };
 
-SlackRequest.prototype.perform = function() {
-  var epoch = this.date().valueOf();
-
+function perform() {
   switch(this.action) {
     case 'add':
-      db.sadd(epoch, this.userId);
-      this.text = "Great, I'll let your team know";
+      dbSet(this.date(), this.userId);
+      this.response.text = "Great, I'll let your team know";
+      break;
+    case 'who':
+      const wfhomers = dbGet(new Date());
+
+      if (wfhomers.length) {
+        this.response.attachments = wfhomers.map(id => {text: id});
+        this.response.text = 'These people are working from home today';
+      } else {
+        this.response.text = 'No one is working from home today';
+      }
       break;
     default:
       break;
@@ -42,6 +53,24 @@ SlackRequest.prototype.perform = function() {
 
   return this.response;
 };
+
+// Common interface to add and list from the DB
+function keyFromDate(date) {
+  return date.toLocaleDateString();
+}
+function dbSet(date, value) {
+  const key = keyFromDate(date);
+  console.log('Set', key);
+  return db.sadd(key, value);
+}
+function dbGet(date) {
+  const key = keyFromDate(date);
+  console.log('Get', key);
+  let members = [];
+  let foo = db.smembers(key, function(_err, data) { return data});
+  console.log('members', members, foo);
+  return members;
+}
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('port', (process.env.PORT || 8080));
